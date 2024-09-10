@@ -1,34 +1,18 @@
+set_env:
+	pyenv virtualenv 3.10.6 ddapp
+	pyenv local ddapp
 
-default: pytest
+reinstall_package:
+	@pip uninstall -y ddapp || :
+	@pip install -e .
 
-# default: pylint pytest
-
-# pylint:
-# 	find . -iname "*.py" -not -path "./tests/test_*" | xargs -n1 -I {}  pylint --output-format=colorized {}; true
-
-pytest:
-	echo "no tests"
-
-# ----------------------------------
-#         LOCAL SET UP
-# ----------------------------------
-
-install_requirements:
-	@pip install -r requirements.txt
-
-# ----------------------------------
-#         HEROKU COMMANDS
-# ----------------------------------
+reinstall_packagex:
+	@brew install pipx
+	@pipx uninstall -y ddapp || :
+	@pipx install -e .
 
 streamlit:
 	-@streamlit run app.py
-
-
-# ----------------------------------
-#    LOCAL INSTALL COMMANDS
-# ----------------------------------
-install:
-	@pip install . -U
 
 clean:
 	@rm -fr */__pycache__
