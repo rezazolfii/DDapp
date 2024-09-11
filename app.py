@@ -156,8 +156,4 @@ if st.button('Submit for ML'):
 #         csv = filtered_df.to_csv(index=False)
 #         b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
 #         href = f'<a href="data:file/csv;base64,{b64}" download="descriptors.csv">Download CSV File</a>'
-<<<<<<< HEAD
 #         st.markdown(href, unsafe_allow_html=True)
-=======
-#         st.markdown(href, unsafe_allow_html=True)
->>>>>>> 4a798aaca2b62c2d804349917047aaf2e143b960
