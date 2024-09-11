@@ -15,23 +15,61 @@ import plotly.express as px
 import numpy as np
 
 
-#user input target
-title = st.text_input('TARGET OF INTREST')
+st.markdown("""
+    # Drug Design Using Agglomerative Clustering
 
-#Read csv file of target
+    ## Marc, Luciano and Reza
+
+""")
+
+def set_bg_hack(main_bg):
+    '''
+    A function to set the background image of the main page
+    '''
+    # set bg name
+    main_bg_ext = "png"
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background: url(data:image/{main_bg_ext};base64,{base64.b64encode(open(main_bg, "rb").read()).decode()});
+             background-repeat: no-repeat;
+             background-position: center top;
+             background-size: cover;
+             background-attachment: scroll;
+             background-color: #a19897; /* Set background color to white */
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True,
+     )
+
+set_bg_hack('background6.jpg')
+
+# st.markdown("""
+#     # TARGET OF INTREST
+# """)
+
+#user input target
+
+title = st.text_input('# TARGET OF INTREST')
 csv_file = 'hdac_targets.csv'
 options_df = pd.read_csv(csv_file)
-
 #Returning the df with targets and rest
 options_df = options_df[['organism', 'pref_name', 'score', 'target_chembl_id', 'target_type']]
 #Hide index
 # hdf = options_df.assign(hack='').set_index('hack')
 
-
 # #filter daframe by index
 options_list = options_df.index.tolist()
-st.write("DataFrame:")
-st.dataframe(options_df)
+
+
+if st.button('Enter'):
+#Read csv file of target
+     st.write("DataFrame:")
+     st.dataframe(options_df)
+
+
 
 
 selected_rows = st.multiselect(
