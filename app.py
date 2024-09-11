@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 from PIL import Image
@@ -5,11 +6,11 @@ import subprocess
 import os
 import base64
 import pickle
-
 import streamlit as st
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
+from sklearn.metrics import silhouette_samples, silhouette_score
 import plotly.express as px
 import numpy as np
 
@@ -20,7 +21,6 @@ title = st.text_input('TARGET OF INTREST')
 #Read csv file of target 
 csv_file = 'hdac_targets.csv'
 options_df = pd.read_csv(csv_file)
-
 
 #Returning the df with targets and rest
 options_df = options_df[['organism', 'pref_name', 'score', 'target_chembl_id', 'target_type']]
@@ -81,11 +81,19 @@ if padel_desc:
 #Read csv file of target 
 csv_file = 'df_merged_final.csv'
 options_df2 = pd.read_csv(csv_file)
+# dai = options_df2.isnull().sum()
+# dai[dai>0]
+options_df3 = options_df2.drop(columns=['BCUT2D_MWHI', 'BCUT2D_CHGHI', 'BCUT2D_CHGLO', 'BCUT2D_LOGPHI', 'BCUT2D_LOGPLOW', 'BCUT2D_MRHI', 'BCUT2D_MWLOW', 'BCUT2D_MRLOW'])
+options_df3.dropna(inplace=True)
+options_df3 = options_df3[~options_df3.isin([np.inf, -np.inf]).any(axis=1)]
     
 if st.button('Molecular Fingerprints DataFrame'):
     st.write('Molecular SMILES Features DataFrame:')
     st.dataframe(options_df2, height=500)  # Set an appropriate height for the scroll bar option
 
+#Read csv file of target 
+csv_file_tsne = 'X_TSNE.csv'
+X_TSNE = pd.read_csv(csv_file_tsne)
 
 if st.button('Submit for ML'):
     
@@ -93,7 +101,8 @@ if st.button('Submit for ML'):
     # Assuming descriptors are stored in df_descriptors
 
     # Placeholder for descriptor DataFrame (Replace with actual descriptors data)
-    df_descriptors = filtered_df.copy()  # Replace with actual descriptors data
+    
+    df_descriptors = options_df3.copy()  # Replace with actual descriptors data
 
     if not df_descriptors.empty:
         st.write('Calculating KMeans and t-SNE...')
@@ -101,21 +110,20 @@ if st.button('Submit for ML'):
         # KMeans Clustering
         kmeans = KMeans(n_clusters=15)  # Number of clusters can be parameterized
         kmeans_labels = kmeans.fit_predict(X_TSNE)
-
         # t-SNE dimensionality reduction
         tsne = TSNE(n_components=2)  # Number of dimensions can be parameterized
         tsne_results = tsne.fit_transform(X_TSNE)
 
         # Create a DataFrame with t-SNE results and KMeans labels
-        tsne_df = pd.DataFrame(tsne_results, columns=['Dim1', 'Dim2', 'Dim3'])
+        tsne_df = pd.DataFrame(tsne_results, columns=['Dim1', 'Dim2'])
         tsne_df['KMeans_Labels'] = kmeans_labels
-
+        tsne_df['KMeans_Labels'] =tsne_df['KMeans_Labels'].astype("category") 
         # Calculate Silhouette Score
-        silhouette_score = metrics.silhouette_score(df_descriptors, kmeans_labels)
+        silhouette_score = silhouette_score(df_descriptors, kmeans_labels)
         st.write(f'Silhouette Score: {silhouette_score}')
 
         # Plotly 3D Scatter Plot
-        fig = px.scatter_3d(tsne_df, x='Dim1', y='Dim2', z='Dim3', color='KMeans_Labels')
+        fig = px.scatter(tsne_df, x='Dim1', y='Dim2', color='KMeans_Labels')
         st.plotly_chart(fig)
     else:
         st.write('Descriptor DataFrame is empty. Please check the data.')
