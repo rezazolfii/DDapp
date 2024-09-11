@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 from PIL import Image
@@ -85,7 +86,6 @@ options_df2 = pd.read_csv(csv_file)
 options_df3 = options_df2.drop(columns=['BCUT2D_MWHI', 'BCUT2D_CHGHI', 'BCUT2D_CHGLO', 'BCUT2D_LOGPHI', 'BCUT2D_LOGPLOW', 'BCUT2D_MRHI', 'BCUT2D_MWLOW', 'BCUT2D_MRLOW'])
 options_df3.dropna(inplace=True)
 options_df3 = options_df3[~options_df3.isin([np.inf, -np.inf]).any(axis=1)]
-
 if st.button('Molecular Fingerprints DataFrame'):
     st.write('Molecular SMILES Features DataFrame:')
     st.dataframe(options_df2, height=500)  # Set an appropriate height for the scroll bar option
@@ -96,11 +96,9 @@ X_TSNE = pd.read_csv(csv_file_tsne)
 
 if st.button('Submit for ML'):
 
-
     # Assuming descriptors are stored in df_descriptors
 
     # Placeholder for descriptor DataFrame (Replace with actual descriptors data)
-
     df_descriptors = options_df3.copy()  # Replace with actual descriptors data
 
     if not df_descriptors.empty:
@@ -158,4 +156,8 @@ if st.button('Submit for ML'):
 #         csv = filtered_df.to_csv(index=False)
 #         b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
 #         href = f'<a href="data:file/csv;base64,{b64}" download="descriptors.csv">Download CSV File</a>'
+<<<<<<< HEAD
 #         st.markdown(href, unsafe_allow_html=True)
+=======
+#         st.markdown(href, unsafe_allow_html=True)
+>>>>>>> 4a798aaca2b62c2d804349917047aaf2e143b960
