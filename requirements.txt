@@ -1,1 +1,14 @@
 streamlit
+matplotlib==3.9.2
+scipy==1.10.0
+seaborn==0.13.2
+pandas==1.5.3
+numpy==1.23.5
+scikit-learn==1.3.1
+uvicorn==0.28.1
+jsonpatch==1.33
+jsonpointer==3.0.0
+jsonschema==4.23.0
+fastapi==0.112.2
+plotly==5.24.0
+#tsne==0.3.1
