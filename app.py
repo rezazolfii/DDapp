@@ -20,7 +20,7 @@ title = st.text_input('TARGET OF INTREST')
 
 #Read csv file of target
 csv_file = 'hdac_targets.csv'
-options_df = pd.read_csv(csv_file)
+options_df = pd.open_csv(csv_file)
 
 #Returning the df with targets and rest
 options_df = options_df[['organism', 'pref_name', 'score', 'target_chembl_id', 'target_type']]
