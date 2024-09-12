@@ -110,7 +110,7 @@ class GeneratingFingerprints:
                 descriptors = calc.CalcDescriptors(mol)
                 Mol_descriptors.append(descriptors)
 
-            df_morgen = pd.DataFrame(Mol_descriptors, columns=desc_names)
+            df_morgen = pd.DataFrame(Mol_descriptors, columns=desc_names).drop(columns = ["NumHAcceptors", "NumHDonors"])
 
             return df_morgen
 

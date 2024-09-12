@@ -79,7 +79,7 @@ if target_name:
             if st.button("Generate Fingerprints"):
                 df_fingerprints = generator.extracting_fingerprints()
                 st.session_state['fingerprints'] = df_fingerprints  # Store fingerprints in session state
-                st.write("Fingerprints generated!")
+                st.write("Fingerprints generated!", df_fingerprints)
 
             # Check if fingerprints are already generated and stored in session state
             if 'fingerprints' in st.session_state:
