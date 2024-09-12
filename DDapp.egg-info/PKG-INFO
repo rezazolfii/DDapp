@@ -16,7 +16,6 @@ Requires-Dist: jsonpointer==3.0.0
 Requires-Dist: jsonschema==4.23.0
 Requires-Dist: fastapi==0.112.2
 Requires-Dist: plotly==5.24.0
-Requires-Dist: tsne==0.3.1
 Requires-Dist: chembl_webresource_client
 Requires-Dist: RDKit
 Requires-Dist: padelpy
