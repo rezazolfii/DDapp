@@ -18,7 +18,7 @@ import numpy as np
 st.markdown("""
     # Drug Design Using Agglomerative Clustering
 
-    ## Marc, Luciano and Reza
+    ## *Marc, Luciano and Reza*
 
 """)
 
