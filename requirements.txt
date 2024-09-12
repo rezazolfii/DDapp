@@ -11,4 +11,6 @@ jsonpointer==3.0.0
 jsonschema==4.23.0
 fastapi==0.112.2
 plotly==5.24.0
-#tsne==0.3.1
+chembl_webresource_client
+RDKit
+padelpy
