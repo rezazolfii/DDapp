@@ -68,7 +68,7 @@ class GeneratingFingerprints:
     def extracting_fingerprints(self):
 
         selection = ['molecule_chembl_id', 'canonical_smiles']
-        df_selection = self.df_target_proteins[selection].dropna().reset_index().drop(columns = "index")
+        df_selection = self.df_target_proteins[selection].reset_index().drop(columns = "index")
 
         def lipinski(smiles, verbose=False):
             """imputs a dataframe of smile strings to return a dataframe with lipiski descriptors"""
@@ -110,18 +110,18 @@ class GeneratingFingerprints:
                 descriptors = calc.CalcDescriptors(mol)
                 Mol_descriptors.append(descriptors)
 
-            df_morgen = pd.DataFrame(Mol_descriptors, columns=desc_names).drop(columns = ["NumHAcceptors", "NumHDonors"])
+            df_morgen = pd.DataFrame(Mol_descriptors, columns=desc_names).drop(columns = ["NumHDonors", "NumHAcceptors"])
 
             return df_morgen
 
         df_morgen = morgen(df_selection['canonical_smiles'])
 
-        def desc_calc():
-            # Performs the descriptor calculation
-            bashCommand = "java -Xms2G -Xmx2G -Djava.awt.headless=true -jar ./PaDEL-Descriptor/PaDEL-Descriptor.jar -removesalt -standardizenitro -fingerprints -descriptortypes ./PaDEL-Descriptor/PubchemFingerprinter.xml -dir ./ -file descriptors_output.csv"
-            process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-            output, error = process.communicate()
-            os.remove('molecule.smi')
+        # def desc_calc():
+        #     # Performs the descriptor calculation
+        #     bashCommand = "java -Xms2G -Xmx2G -Djava.awt.headless=true -jar ./PaDEL-Descriptor/PaDEL-Descriptor.jar -removesalt -standardizenitro -fingerprints -descriptortypes ./PaDEL-Descriptor/PubchemFingerprinter.xml -dir ./ -file descriptors_output.csv"
+        #     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        #     output, error = process.communicate()
+        #     os.remove('molecule.smi')
 
         df_selection['canonical_smiles'].to_csv('smiles_input.smi', index=False, header=False)
 
@@ -143,10 +143,18 @@ class GeneratingFingerprints:
         X = self.df_final.drop(columns = "molecule_chembl_id")
 
         invalid = ['BCUT2D_MWHI', 'BCUT2D_MWLOW', 'BCUT2D_CHGHI', 'BCUT2D_CHGLO', 'BCUT2D_LOGPHI', 'BCUT2D_LOGPLOW', 'BCUT2D_MRHI', 'BCUT2D_MRLOW']
-        if [i for i, n in X.isna().sum().to_dict().items() if n != 0] == invalid:
-            X = X.drop(columns = invalid)
-        else:
-            raise KeyError("Too bad, try again")
+        X = X.drop(columns = invalid)
+        misvals=X.isnull().sum()
+        to_drop = misvals[misvals > (0.30 * X.shape[0])].to_dict().keys()
+        X = X.drop(columns = to_drop)
+        X.dropna(inplace = True)
+        # to complete list of missing vars to drop
+
+
+        # if [i for i, n in X.isna().sum().to_dict().items() if n != 0] == invalid:
+        #     X = X.drop(columns = invalid)
+        # else:
+        #     raise KeyError("Too bad, try again")
 
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
